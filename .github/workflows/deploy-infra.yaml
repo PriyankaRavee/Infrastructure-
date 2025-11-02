@@ -1,0 +1,29 @@
+name: Deploy Infra with Docker Compose
+
+on:
+  push:
+    branches: [ main, dev_v1 ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Start Docker services
+      run: |
+        echo "🔧 Starting Docker Compose services..."
+        docker network create devops-net || true
+        docker compose up -d --build
+
+        echo " Waiting 20 seconds for services to initialize..."
+        sleep 20
+
+        echo "Checking service health..."
+        docker compose ps
+        docker compose logs --tail=20
