@@ -32,7 +32,7 @@ services:
     build: ./app
     container_name: node-app
     ports:
-      - "3000:3000"
+      - "3005:3000"
     depends_on:
       redis:
         condition: service_healthy
